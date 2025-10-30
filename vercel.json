@@ -1,9 +1,0 @@
-{
-  "buildCommand": "npm run build",
-  "env": {
-     "DATABASE_URL": "mysql://facerec:iqmi8j55PDpHQ@mysql-facerec.alwaysdata.net:3306/facerec_form",
-    "JWT_SECRET": "@jwt_secret",
-    "NEXT_PUBLIC_API_BASE_URL": "@api_url",
-    "WEB_ORIGIN": "@web_origin"
-  }
-}
