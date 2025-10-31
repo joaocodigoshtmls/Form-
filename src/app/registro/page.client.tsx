@@ -75,8 +75,8 @@ export default function RegistroPageClient() {
       // Atualizar contexto de autenticação
       await refetch()
       
-      // Redirecionar para página de pacotes
-      router.push(rotaPacote())
+  // Redirecionar para página de início conforme solicitado
+  router.push('/inicio')
     } catch (err) {
       console.error('❌ Registration error:', err)
       setError('Erro ao conectar ao servidor. Verifique sua conexão.')
@@ -88,7 +88,7 @@ export default function RegistroPageClient() {
   return (
     <>
       <Header />
-      <Main>
+  <Main className="pt-8 md:pt-12">
         <div className="mx-auto max-w-md px-4">
           <motion.div initial="initial" animate="animate" variants={{ animate: { transition: { staggerChildren: 0.1 } } }}>
             {/* Step indicator removido */}
@@ -196,7 +196,7 @@ export default function RegistroPageClient() {
               </Card>
             </motion.div>
 
-            <motion.div variants={fadeInUp} className="mt-6 text-center">
+            <motion.div variants={fadeInUp} className="mt-6 mb-10 md:mb-14 text-center">
               <p className="text-slate-600">
                 Já tem uma conta?{' '}
                 <Link href="/login" className="focus-ring font-semibold text-primary-600 hover:text-primary-700">

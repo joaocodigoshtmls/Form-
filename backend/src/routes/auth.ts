@@ -1,20 +1,14 @@
 /**
- * Routes: Autenticação
- *
- * POST   /register → Criar usuário
- * POST   /login    → Fazer login
- * POST   /logout   → Fazer logout (limpar cookie)
- * GET    /me       → Obter usuário autenticado
+ * Rotas de autenticação migradas para o backend dedicado.
  */
 
-import type { Router, Request, Response } from 'express';
-import { z } from 'zod';
+import type { Request, Response, Router } from 'express';
 import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { prisma } from '@/lib/prisma';
+import { z } from 'zod';
+import { prisma } from '../lib/prisma';
 import { requireAuth } from '../middleware/auth';
 
-// Validação
 const RegisterSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8).max(128),
@@ -26,32 +20,24 @@ const LoginSchema = z.object({
   password: z.string(),
 });
 
-export function setupAuthRoutes(router: Router) {
-  /**
-   * Helper: Setar cookie com JWT
-   */
-  function setCookie(res: Response, userId: string) {
-    const token = jwt.sign({ sub: userId }, process.env.JWT_SECRET!, {
-      expiresIn: '7d',
-    });
-    const cookieName = process.env.COOKIE_NAME || 'access_token';
-    const secure = process.env.NODE_ENV === 'production';
-    res.cookie(cookieName, token, {
-      httpOnly: true,
-      secure,
-      sameSite: 'lax',
-      path: '/',
-      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-    });
-  }
+function setCookie(res: Response, userId: string) {
+  const token = jwt.sign({ sub: userId }, process.env.JWT_SECRET!, {
+    expiresIn: '7d',
+  });
+  const cookieName = process.env.COOKIE_NAME || 'access_token';
+  const secure = process.env.NODE_ENV === 'production';
+  res.cookie(cookieName, token, {
+    httpOnly: true,
+    secure,
+    sameSite: 'lax',
+    path: '/',
+    maxAge: 1000 * 60 * 60 * 24 * 7,
+  });
+}
 
-  /**
-   * POST /auth/register
-   * Criar novo usuário
-   */
+export function setupAuthRoutes(router: Router) {
   router.post('/auth/register', async (req: Request, res: Response) => {
     try {
-      // Validar entrada
       const parsed = RegisterSchema.safeParse(req.body);
       if (!parsed.success) {
         return res.status(400).json({
@@ -62,21 +48,17 @@ export function setupAuthRoutes(router: Router) {
 
       const { email, password, name } = parsed.data;
 
-      // Verificar se usuário já existe
       const existing = await prisma.user.findUnique({ where: { email } });
       if (existing) {
         return res.status(409).json({ error: 'user already exists' });
       }
 
-      // Hash password
       const hash = await bcryptjs.hash(password, 10);
 
-      // Criar usuário
       const user = await prisma.user.create({
         data: { email, password: hash, name },
       });
 
-      // Setar cookie
       setCookie(res, user.id);
 
       res.status(201).json({
@@ -88,13 +70,8 @@ export function setupAuthRoutes(router: Router) {
     }
   });
 
-  /**
-   * POST /auth/login
-   * Fazer login com email + senha
-   */
   router.post('/auth/login', async (req: Request, res: Response) => {
     try {
-      // Validar entrada
       const parsed = LoginSchema.safeParse(req.body);
       if (!parsed.success) {
         return res.status(400).json({
@@ -110,10 +87,7 @@ export function setupAuthRoutes(router: Router) {
         return res.status(401).json({ error: 'invalid credentials' });
       }
 
-      const passwordMatch = await bcryptjs.compare(
-        password,
-        (user as any).password
-      );
+      const passwordMatch = await bcryptjs.compare(password, (user as any).password);
       if (!passwordMatch) {
         return res.status(401).json({ message: 'invalid credentials' });
       }
@@ -129,29 +103,19 @@ export function setupAuthRoutes(router: Router) {
     }
   });
 
-  /**
-   * POST /auth/logout
-   * Fazer logout (limpar cookie)
-   */
   router.post('/auth/logout', (_req: Request, res: Response) => {
     const cookieName = process.env.COOKIE_NAME || 'access_token';
     res.clearCookie(cookieName, { path: '/' });
     res.json({ ok: true });
   });
 
-  /**
-   * GET /auth/me
-   * Obter usuário autenticado
-   */
   router.get('/auth/me', requireAuth, async (req: Request, res: Response) => {
     try {
       const user = await prisma.user.findUnique({
         where: { id: req.userId! },
       });
       res.json({
-        user: user
-          ? { id: user.id, email: user.email, name: user.name }
-          : null,
+        user: user ? { id: user.id, email: user.email, name: user.name } : null,
       });
     } catch (error) {
       console.error('Get me error:', error);

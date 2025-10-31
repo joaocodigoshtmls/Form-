@@ -2,6 +2,7 @@ export const PACOTE_SLUG = 'porto-seguro-3d2n'
 export const rotaPacote = (slug: string = PACOTE_SLUG) => `/pacotes/${slug}`
 export const reservaHref = (slug: string = PACOTE_SLUG) => `${rotaPacote(slug)}#reserva`
 export const rotaReserva = (slug: string = PACOTE_SLUG) => `${rotaPacote(slug)}#reserva`
+export const rotaReservaCompleta = (slug?: string) => (slug ? `/reserva?roteiro=${slug}` : '/reserva')
 export const rotaRoteiro = (slug?: string) => (slug ? `/roteiro#roteiro-${slug}` : '/roteiro')
 export const rotaContato = '/contato'
 

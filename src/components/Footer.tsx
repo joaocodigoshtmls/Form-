@@ -21,9 +21,9 @@ export default function Footer() {
   ]
 
   return (
-    <footer className="bg-gradient-to-b from-slate-900 to-slate-950 text-slate-100 py-16">
+  <footer className="bg-gradient-to-b from-slate-900 to-slate-950 text-slate-100 py-6">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <nav className="md:hidden mb-10" aria-label="Acesso rápido">
+  <nav className="md:hidden mb-6" aria-label="Acesso rápido">
           <ul className="grid grid-cols-4 gap-2">
             {quickLinks.map((item) => {
               const Icon = item.icon
@@ -42,7 +42,7 @@ export default function Footer() {
           </ul>
         </nav>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+  <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           {/* Company Info */}
           <div>
             <div className="flex items-center gap-2 mb-4">

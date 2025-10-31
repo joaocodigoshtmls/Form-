@@ -68,10 +68,10 @@ export default function LoginPageClient() {
   return (
     <>
       <Header />
-      <Main>
+      <Main className="pt-10 md:pt-16 pb-16">
         <div className="mx-auto max-w-md px-4">
           <motion.div initial="initial" animate="animate" variants={{ animate: { transition: { staggerChildren: 0.1 } } }}>
-            <motion.div variants={fadeInUp} className="mb-8 text-center">
+            <motion.div variants={fadeInUp} className="mb-10 md:mb-14 text-center">
               <div className="mb-4 flex justify-center">
                 <div className="rounded-lg bg-primary-100 p-4">
                   <LogIn className="text-primary-600" size={32} />
@@ -144,7 +144,7 @@ export default function LoginPageClient() {
               </Card>
             </motion.div>
 
-            <motion.div variants={fadeInUp} className="mt-6 text-center">
+            <motion.div variants={fadeInUp} className="mt-10 md:mt-12 text-center">
               <p className="text-slate-600">
                 Não tem uma conta?{' '}
                 <Link href="/registro" className="focus-ring font-semibold text-primary-600 hover:text-primary-700">

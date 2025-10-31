@@ -5,7 +5,7 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import Main from '@/components/Main'
-import { rotaContato, rotaPacote } from '@/lib/links'
+import { rotaContato, rotaPacote, rotaReservaCompleta } from '@/lib/links'
 import Card from '@/components/Card'
 import Image from 'next/image'
 import { Check } from 'lucide-react'
@@ -226,9 +226,20 @@ export default function RoteiroPageClient() {
               </div>
 
               <div className="pt-2">
-                <Link href={rotaContato} className="focus-ring inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-primary-600 to-accent-600 px-5 py-2.5 font-semibold text-white shadow-lg transition-all duration-200 hover:from-primary-500 hover:to-accent-500">
-                  Entrar em contato
-                </Link>
+                <div className="flex flex-col gap-3 sm:flex-row">
+                  <Link
+                    href={rotaContato}
+                    className="focus-ring inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-primary-600 to-accent-600 px-5 py-2.5 font-semibold text-white shadow-lg transition-all duration-200 hover:from-primary-500 hover:to-accent-500"
+                  >
+                    Entrar em contato
+                  </Link>
+                  <Link
+                    href={rotaReservaCompleta(detalhe.slug)}
+                    className="focus-ring inline-flex items-center justify-center rounded-lg border border-primary-200 bg-white px-5 py-2.5 font-semibold text-primary-700 shadow-sm transition-all duration-200 hover:border-primary-300 hover:bg-primary-50"
+                  >
+                    Reservar agora
+                  </Link>
+                </div>
               </div>
             </div>
           )}

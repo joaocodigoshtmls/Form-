@@ -1,10 +1,9 @@
 /**
  * Middleware: Autenticação via JWT (cookie httpOnly)
- * Verifica se token existe e é válido
- * Define req.userId para uso em rotas protegidas
+ * Reaproveitado do backend existente para nova pasta dedicada.
  */
 
-import type { Request, Response, NextFunction } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 
 declare global {

@@ -18,11 +18,12 @@ type CarouselImage = {
 type CarouselProps = {
   images: CarouselImage[]
   interval?: number
+  showCredit?: boolean
 }
 
 const MIN_INTERVAL = 4000
 
-export default function Carousel({ images, interval = 6000 }: CarouselProps) {
+export default function Carousel({ images, interval = 6000, showCredit = false }: CarouselProps) {
   const safeInterval = useMemo(() => Math.max(interval, MIN_INTERVAL), [interval])
   const [current, setCurrent] = useState(0)
   const totalSlides = Array.isArray(images) ? images.length : 0
@@ -78,7 +79,7 @@ export default function Carousel({ images, interval = 6000 }: CarouselProps) {
                   placeholder={image.blurDataURL ? 'blur' : 'empty'}
                   blurDataURL={image.blurDataURL}
                 />
-                {image.credit?.name ? (
+                {showCredit && image.credit?.name ? (
                   <span className={styles.credit}>
                     Foto: {image.credit.url ? (
                       <a href={image.credit.url} target="_blank" rel="noreferrer" className={styles.creditLink}>

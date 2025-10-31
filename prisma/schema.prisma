@@ -20,6 +20,7 @@ model User {
 
   posts      Post[]
   pointEvents PointEvent[]
+  reservations ReservationRequest[]
 
   @@map("User")
 }
@@ -67,4 +68,61 @@ model PointEvent {
   @@index([userId])
   @@index([createdAt])
   @@map("PointEvent")
+}
+
+model ReservationRequest {
+  id          String              @id @default(cuid())
+  userId      String
+  user        User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  slug        String?
+  destination String?
+  tripStart   DateTime?
+  tripEnd     DateTime?
+  tripDuration String?
+  budget      String?
+  status      ReservationStatus   @default(PENDING)
+  formData    Json
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+
+  payments    ReservationPayment[]
+
+  @@index([userId])
+  @@map("ReservationRequest")
+}
+
+model ReservationPayment {
+  id            String            @id @default(cuid())
+  reservationId String
+  reservation   ReservationRequest @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+  method        PaymentMethod
+  amount        Decimal?          @db.Decimal(10, 2)
+  currency      String            @default("BRL")
+  details       Json?
+  status        PaymentStatus     @default(CONFIRMED)
+  paidAt        DateTime          @default(now())
+  receiptCode   String            @unique
+  createdAt     DateTime          @default(now())
+
+  @@index([reservationId])
+  @@map("ReservationPayment")
+}
+
+enum ReservationStatus {
+  PENDING
+  CONFIRMED
+  PAID
+  CANCELLED
+}
+
+enum PaymentMethod {
+  PIX
+  CREDIT_CARD
+  BOLETO
+}
+
+enum PaymentStatus {
+  PENDING
+  CONFIRMED
+  FAILED
 }
